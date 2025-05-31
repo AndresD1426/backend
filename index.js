@@ -32,11 +32,14 @@ const Task = mongoose.model('Task', taskSchema);
 app.post('/api/tasks', async (req, res) => {
   try {
     const { title, description } = req.body;
+    if (!title || !description) {
+      return res.status(400).json({ error: 'Title and description are required' });
+    }
     const task = new Task({ title, description });
     await task.save();
     res.status(201).json(task);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
